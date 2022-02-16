@@ -11,3 +11,7 @@
 // articles 11 à 15 ayant comme id_categorie 1).
 
 
+require_once 'bdd.php';
+include('header.php');
+?>
+

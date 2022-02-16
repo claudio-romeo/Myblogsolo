@@ -10,8 +10,9 @@
 //  Dès qu’un utilisateur remplit ce formulaire, les données sont insérées dans la base de données et l’utilisateur est dirigé vers la page de connexion. -->
 
 <?php
+require_once 'bdd.php';
 
-require_once("bdd.php"); /* ceci est la base de donné*/
+
 
 
 if (isset($_POST['form_inscription']))
@@ -26,7 +27,7 @@ if (isset($_POST['form_inscription']))
                         
             $requete = $bdd->query("SELECT COUNT(*) FROM `utilisateurs` WHERE login = '$_POST[login]'");
             $requete->execute();
-            $result = $requete->fetchAll();
+            $result = $requete->fetch();
             // on fait une requete en BDD pour compter le nombre de login correspondant a celui rentrer par l'utilisateur
 
             if ($result['COUNT(*)'] == 1)

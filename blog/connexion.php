@@ -1,5 +1,7 @@
 <?php
 require_once 'bdd.php';
+include('header.php');
+
 
 // on commence par verifier si les input existe
 if(isset($_POST['login']) && isset($_POST['password']))
@@ -11,7 +13,7 @@ if(isset($_POST['login']) && isset($_POST['password']))
 
     // ensuite on check si l'utilisateur exist en BDD 
 
-    $check = $_bdd->prepare('SELECT login, password, email FROM utilisateurs WHERE login = ?');
+    $check = $bdd->prepare('SELECT login, password, email FROM utilisateurs WHERE login = ?');
     $check->execute(array($login));
     $data = $check->fetch();
     $row = $check->rowCount();
@@ -24,7 +26,10 @@ if(isset($_POST['login']) && isset($_POST['password']))
 
                 if($data['password'] === $password)
                 {
-                    $_SESSION['user'] = $data['login'];
+                    $_SESSION['login'] = $data['login'];
+                    $_SESSION['id'] = $tableau['id'];
+                    $_SESSION['login'] = $tableau['login'];
+                    $_SESSION['password'] = $tableau['password'];
 
 
                 }else header('location:index.php?login_err=password');
@@ -44,7 +49,7 @@ if(isset($_POST['login']) && isset($_POST['password']))
 </head>
 <body>
     <div class="login_form">
-        <form action="conexion.php" method="post">
+        <form action="connexion.php" method="post">
         <h2 class="text_center">Connexion</h2>
         <div class="form_groupe">
             <input type="login" name="login" class="form_control" placeholder="Login" required="required" autocomplete="off">
