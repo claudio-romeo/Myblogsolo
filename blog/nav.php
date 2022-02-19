@@ -35,7 +35,7 @@ require_once 'bdd.php';
         ?>
             <li><a href="deconnexion.php">deconnexion</a></li>
             <li><a href="profil.php">profil</a></li>
-            <li><a href="creer-article..php">Poster</a></li>
+            <li><a href="creer-article.php">Poster</a></li>
             <li><a href="article.php">Article</a></li>
 
 

@@ -33,8 +33,8 @@ if (isset($_POST['login']) && isset($_POST['password']))
 
          header('location:index.php');
          }
-         else  $erreur = 'ERREUR';
-    }     else  $erreur = 'ERREUR';
+         else  $erreur = 'Vôtre login ou mot de pass est éronné !';
+    }     else  $erreur = 'Vôtre login ou mot de pass est éronné !';
 }    
 
 ?>

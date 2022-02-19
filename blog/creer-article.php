@@ -1,5 +1,5 @@
 <?php
-
+require_once 'bdd.php';
 // Cette page possède un formulaire permettant aux modérateurs et
 // administrateurs de créer de nouveaux articles. Le formulaire contient donc
 // le texte de l’article, une liste déroulante contenant les catégories existantes

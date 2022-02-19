@@ -57,7 +57,7 @@ if (isset($_POST['form_inscription']))
 
               
                 // si tout est ok alors on redirige vers la page de connexion 
-                // header('location: connexion.php');
+                header('location: connexion.php');
             }
         } else {
             $erreur = "Vos password ne correspondent pas !";
