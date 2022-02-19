@@ -3,15 +3,7 @@ require_once 'bdd.php';
 
 
 
-if(isset($_POST['id']) && $_POST['id'] > 0)
-{
-    $login_profil = htmlspecialchars($_POST['id']);
-    $postid = intval($_POST['id']);
-    $requete_profil = $bdd->prepare("SELECT* FROM `utilisateurs` WHERE login=$login_profil' ");
-    $requete_profil->execute();
-    $result = $requete_profil->fetch();
-    $log = $_SESSION['login'];
-}
+
 ?>
 <!DOCTYPE html>
  <html lang="Fr">
@@ -36,7 +28,7 @@ if(isset($_POST['id']) && $_POST['id'] > 0)
 
    <main class="text_profil">
      <P>
-       <?php echo 'Bonjour et bienvenue ' . $log. ' si vous désirez changer vos informations <a href="edition.php">Mon profil</a>';
+       <?php echo 'Bonjour et bienvenue ' . $_SESSION['login']. ' si vous désirez changer vos informations <a href="edition.php">Mon profil</a>';
         ?>
         <br>
         <br>
