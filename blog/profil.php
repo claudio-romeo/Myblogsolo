@@ -7,6 +7,11 @@ if (isset($_SESSION['login']))
  // on met le login dans une variable 
   $log_enter = $_SESSION['login'];
 
+  if(isset($_SESSION['email']))
+  {
+    $newmail = $_SESSION['email'];
+  }
+
 }
   else 
     {
@@ -15,7 +20,7 @@ if (isset($_SESSION['login']))
     
 
 if(isset($_POST['soumis']))
-//si le formulaire est soumis alors on verifie que les pass correspondent avant la modification
+//si le formulaire est soumis alors on verifie qu'il y a une demande de changement  
 {
   if($_POST['password'] == $_POST['pass2'])
   {
@@ -34,17 +39,18 @@ if(isset($_POST['soumis']))
     {
       echo $erreur = 'login non disponible !';
     } 
-    else {
-      $req_insert = $bdd->prepare("UDDATE `utilisateurs` SET `login`= $newlog, `password`= $newpass, $newmail='email' where login = $log_enter");
-      $req_insert->execute();
+    // Si il apres soumission du formulaire il y a une demande de modification alors -->
+    else {        
+      $req_insert = $bdd->prepare("UPDATE `utilisateurs` SET `login`=\'$newlog\',`password`=\'$newpass\',`email`=\'$newmail\',`id_droits`=\'1\' WHERE $log_enter;");
+      $req_insert->execute(array($newlog,$newpass,$newmail));
       $result_insert = $req_insert->fetch();
 
       $_SESSION['login']=$newlog ;
       $_SESSION['password']=$newpass;
-      $_SESSION['mail']=$newmail;
+      $_SESSION['email']=$newmail;
       var_dump($_SESSION);
 
-      echo "UPDATE `utilisateurs` SET `login`= '$newlog',`password`= '$newpass', `email`= '$newmail'  where login = '$login_entree'";
+      // echo "UPDATE `utilisateurs` SET `login`= '$newlog',`password`= '$newpass', `email`= '$newmail'  where login = '$login_entree'";
 
       header('location: profil.php?id='.$_SESSION['id']);
     }
@@ -80,7 +86,7 @@ if(isset($_POST['soumis']))
   <main class="text_profil">
     <P>
       <?php echo 'Bonjour et bienvenue ' . $_SESSION['login'] . ' si vous désirez changer vos informations
-      </br> '. $_SESSION['mail'] .'';
+      </br> ' . $_SESSION['email'] . '';
       
       ?>
       <br>
