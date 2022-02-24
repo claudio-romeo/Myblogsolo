@@ -28,13 +28,13 @@ require_once 'bdd.php';
         } elseif ($_SESSION['login'] == "admin") { ?>
 
             <li><a href="deconnexion.php">deconnexion</a></li>
-            <li><a href="profil.php">profil</a></li>
+            <li><a href="edition.php">profil</a></li>
             <li><a href="admin.php">admin</a></li>
         <?php
         } else {
         ?>
             <li><a href="deconnexion.php">deconnexion</a></li>
-            <li><a href="profil.php">profil</a></li>
+            <li><a href="edition.php">profil</a></li>
             <li><a href="creer-article.php">Poster</a></li>
             <li><a href="article.php">Article</a></li>
 

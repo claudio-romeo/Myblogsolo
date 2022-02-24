@@ -2,7 +2,7 @@
 require_once 'bdd.php';
 
 // si on est bien connecté 
-if (isset($_SESSION['login'])) {
+if (isset($_SESSION['id'])) {
     // on met le login dans une variable 
     $log_enter = $_SESSION['login'];
 
@@ -21,7 +21,10 @@ if (isset($_POST['soumis']))
     if (isset($_POST["newlogin"]) && isset($_POST["password"]) && isset($_POST["email"])) {
         $newlog = htmlspecialchars(($_POST['newlogin']));
         // $newpass = password_hash($_POST['password2'], PASSWORD_DEFAULT);
+
         $newmail = htmlspecialchars($_POST['email']);
+
+   
 
         $request = $bdd->prepare("SELECT * FROM `utilisateurs` WHERE login= :newlog");
 
@@ -30,20 +33,14 @@ if (isset($_POST['soumis']))
         $result = $request->fetch();
 
         $count = $request->rowCount();
-        var_dump($request);
-        var_dump($count);
-        var_dump($_SESSION);
+ 
+    
+
+        if ($count == 1 or $_POST['newlogin'] == $log_enter) 
+        {
 
 
-
-        if ($count == 1 or $_POST['newlogin'] == $log_enter) {
-            echo $erreur = 'login non disponible !';
-        }
-        // Si il apres soumission du formulaire il y a une demande de modification alors -->
-        else {
-            var_dump($result);
-            if (password_verify($_POST['password'], $result['password'])) {
-                $req_insert = $bdd->prepare("UPDATE `utilisateurs` SET login = newlog = :newlog, email = :newemail , id_droits = 1  WHERE id = :id");
+            $req_insert = $bdd->prepare("UPDATE `utilisateurs` SET login = newlog = :newlog, email = :newemail , id_droits = 1  WHERE id = :id");
                 $req_insert->execute(array(':newlog' => $newlog, ':newemail' => $newmail, ':id' => $_SESSION["id"]));
                 $result_insert = $req_insert->fetch();
 
@@ -51,11 +48,22 @@ if (isset($_POST['soumis']))
                 $_SESSION['password'] = $newpass;
                 $_SESSION['email'] = $newmail;
                 var_dump($_SESSION);
+
+          
+        }
+        // Si il apres soumission du formulaire il y a une demande de modification alors -->
+        else {
+            var_dump($result);
+            echo $erreur = 'login non disponible !';
             }
 
-            echo "UPDATE `utilisateurs` SET `login`= '$newlog',`password`= '$newpass', `email`= '$newmail'  where login = '$login_entree'";
+            // echo "UPDATE `utilisateurs` SET `login`= '$newlog',`password`= '$newpass', `email`= '$newmail'  where login = '$login_entree'";
 
-            header('location: profil.php?id='.$_SESSION['id']);
+            // header('location: profil.php?id='.$_SESSION['id']);
+                    var_dump($request);
+                    var_dump($count);
+                    var_dump($_SESSION);
+
         }
     }
 }
