@@ -17,17 +17,16 @@ if (isset($_POST['login']) && isset($_POST['password']))
     $check->execute(array($login));
     $data = $check->fetch();
     $row = $check->rowCount();
-
+    var_dump($data);
     if ($row == 1) 
     {
-
+        
 
 
          if (password_verify($password,$data['password'])) 
          {
             $_SESSION['login'] = $data['login'];
             $_SESSION['id'] = $data['id'];
-            $_SESSION['login'] = $data['login'];
             $_SESSION['password'] = $data['password'];
             $_SESSION['email'] = $data['email'];
             $_SESSION['id_droits'] = $data['id_droits'];
