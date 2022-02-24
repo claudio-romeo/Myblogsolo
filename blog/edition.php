@@ -3,7 +3,8 @@
 require_once 'bdd.php';
 
 // si on est bien connecté 
-if (isset($_SESSION['id'])) {
+if (isset($_SESSION['id'])) 
+{
     // Si l'utilisateur est connecté et qu'il a bien un id dans la bdd alors
     $requete = $bdd->prepare("SELECT * FROM utilisateurs WHERE id = ?");
 
@@ -11,7 +12,9 @@ if (isset($_SESSION['id'])) {
 
     $user = $requete->fetch();
 
-    if (isset($_POST['newlogin']) && !empty($_POST['newlogin']) && $_POST['newlogin'] != $user['login']) 
+    // $row = $requete->rowCount();
+
+    if (isset($_POST['newlogin']) && !empty($_POST['newlogin']) && $_POST['newlogin'] == $user['login']) 
     {
         // on sécurise nos variable 
         $newlog = htmlspecialchars(($_POST['newlogin']));
@@ -21,15 +24,12 @@ if (isset($_SESSION['id'])) {
         $insert_log->execute(array($newlog, $_SESSION['id']));
 
         header("location: edition.php?id=" . $_SESSION['id']);
-            
-        
-           
     }
 
     if (isset($_POST['newmail']) && !empty($_POST['newmail']) && $_POST['newmail'] != $user['email']) 
     {
         // on sécurise nos variable 
-       
+
         $newmail = htmlspecialchars($_POST['newmail']);
 
         $insert_mail = $bdd->prepare("UPDATE utilisateurs SET email = ? Where id = ?");
@@ -37,58 +37,52 @@ if (isset($_SESSION['id'])) {
         $insert_mail->execute(array($newmail, $_SESSION['id']));
 
         header("location: edition.php?id=" . $_SESSION['id']);
-            
     }
 
     if (isset($_POST['password']) && !empty($_POST['password'] != $user['password'])) 
     {
         // on sécurise nos variable 
-        $password = htmlspecialchars($_POST['password']);
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
         $insert_pass = $bdd->prepare("SELECT utilisateurs SET password = ? Where id = ?");
 
         $insert_pass->execute(array($password, $_SESSION['id']));
 
-        if (password_verify($password,$user['password'])) 
+        if (password_verify($password, $user['password'])) 
         {
-           $_SESSION['login'] = $user['login'];
+            $_SESSION['login'] = $user['login'];
 
-           $_SESSION['id'] = $user['id'];
+            $_SESSION['id'] = $user['id'];
 
-           $_SESSION['password'] = $user['password'];
+            $_SESSION['password'] = $user['password'];
 
-           $_SESSION['email'] = $user['email'];
+            $_SESSION['email'] = $user['email'];
 
-           $_SESSION['id_droits'] = $user['id_droits'];
+            $_SESSION['id_droits'] = $user['id_droits'];
 
-           header("location: edition.php?id=" . $_SESSION['id']);
-        }
+            header("location: edition.php?id=" . $_SESSION['id']);
 
-        else  $erreur = 'Vôtre login ou mot de pass est éronné !';
-
+        } else  $erreur = 'Login non disponible ou mot de passe non valide  !';
     }
 
-    if (isset($_POST['pass1']) && isset($_POST['pass2'])) 
-    {
-        // on sécurise nos variable 
-       
-        $newpass1 = htmlspecialchars($_POST['pass1']);
+    // if (isset($_POST['pass1']) && isset($_POST['pass2'])) 
+    // {
+    //     // on sécurise nos variable 
 
-        $newpass2 = htmlspecialchars($_POST['pass2']);
+    //     $newpass1 =  sha1($_POST['pass1'], PASSWORD_DEFAULT);
 
-        if($newpass1 == $newpass2)
-        {
-            $insert_pass1 = $bdd->prepare("UPDATE utilisateurs SET password = ? Where id = ?");
 
-            $insert_pass1->execute(array($newpass1, $_SESSION['id']));
+    //     $newpass2 = sha1($_POST['pass2'], PASSWORD_DEFAULT);
 
-         header("location: edition.php?id=" . $_SESSION['id']);
-        }
-        
-        else  $erreur = 'Vos mot de passe ne correspondent pas !';
-         
-            
-    }
+    //     if ($newpass1 == $newpass2) 
+    //     {
+    //         $insert_pass1 = $bdd->prepare("UPDATE utilisateurs SET password = ? Where id = ?");
+
+    //         $insert_pass1->execute(array($newpass1, $_SESSION['id']));
+
+    //         header("location: edition.php?id=" . $_SESSION['id']);
+    //     } else  $erreur = 'Vos mot de passe ne correspondent pas !';
+    // }
 
 ?>
 
@@ -116,15 +110,15 @@ if (isset($_SESSION['id'])) {
 
         <main class="text_profil">
 
-            <h2>Profil de <?php echo $_SESSION['login'];?></h2>
-            
+            <h2 align="center">Profil de <?php echo $_SESSION['login']; ?></h2>
 
-          
-            <form action="" method="POST" class="profil_tab">
+
+
+            <form action="" method="POST" class="profil_tab" align="center">
                 <table>
 
                     <input type="text" name="newlogin" placeholder="Modifier votre login" value="<?php echo $user['login']; ?>" /><br>
-                    <input type="password" name="password" placeholder="Password" required /><br>
+                    <input type="password" name="password" placeholder="Password" /><br>
                     <input type="email" name="newmail" placeholder="Nouveau Email" value="<?php echo  $user['email']; ?>" /><br>
                     <input type="password" name="pass1" placeholder="Nouveau Password" /><br>
                     <input type="password" name="pass2" placeholder="verifier votre password" /><br>
