@@ -19,12 +19,42 @@ if (isset($_SESSION['id']))
         // on sécurise nos variable 
         $newlog = htmlspecialchars(($_POST['newlogin']));
 
-        $insert_log = $bdd->prepare("UPDATE utilisateurs SET login = ? Where id = ?");
+        $insert_log = $bdd->prepare("UPDATE utilisateurs SET login = ? WHERE id = ?");
 
         $insert_log->execute(array($newlog, $_SESSION['id']));
 
         header("location: edition.php?id=" . $_SESSION['id']);
     }
+    elseif (isset($_POST['newlogin']) && !empty($_POST['newlogin']) && $_POST['newlogin'] != $user['login']) 
+    {
+        $log = htmlspecialchars(($_SESSION['login'])) ;
+
+        $requser = $bdd->prepare("SELECT * FROM utilisateurs SET login = ? WHERE id = ?");
+
+        $requser->execute(array($log, $_SESSION['id']));
+
+
+        $row = $requser->fetch();
+        var_dump($row);
+        var_dump($log);
+
+            if ($row['COUNT(*)'] == 1 && $_POST['newlogin'] !=$log)
+            {
+              echo  'erreur erreur';
+            }
+            else
+            {
+                $newlogin = htmlspecialchars(($_POST['newlogin']));
+
+                $insert_login = $bdd->prepare("UPDATE utilisateurs SET login = ? WHERE login = ?");
+
+                $insert_login->execute(array($newlogin, $_SESSION['id']));
+
+                header("location: edition.php?id=" . $_SESSION['id']);
+            }
+            
+    }
+
 
     if (isset($_POST['newmail']) && !empty($_POST['newmail']) && $_POST['newmail'] != $user['email']) 
     {
@@ -63,6 +93,7 @@ if (isset($_SESSION['id']))
             header("location: edition.php?id=" . $_SESSION['id']);
 
         } else  $erreur = 'Login non disponible ou mot de passe non valide  !';
+        var_dump($user);
     }
 
     // if (isset($_POST['pass1']) && isset($_POST['pass2'])) 
