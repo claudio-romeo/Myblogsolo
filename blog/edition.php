@@ -3,7 +3,7 @@
 require_once 'bdd.php';
 
 // si on est bien connecté 
-if (isset($_SESSION['id'])) 
+if (isset($_SESSION['id']) &&  $_SESSION['id'] > 0) 
 {
     // Si l'utilisateur est connecté et qu'il a bien un id dans la bdd alors
     $requete = $bdd->prepare("SELECT * FROM utilisateurs WHERE id = ?");
@@ -11,7 +11,7 @@ if (isset($_SESSION['id']))
     $requete->execute(array($_SESSION['id']));
 
     $user = $requete->fetch();
-
+    
     // $row = $requete->rowCount();
 
     if (isset($_POST['newlogin']) && !empty($_POST['newlogin']) && $_POST['newlogin'] == $user['login']) 
@@ -22,33 +22,33 @@ if (isset($_SESSION['id']))
         $insert_log = $bdd->prepare("UPDATE utilisateurs SET login = ? WHERE id = ?");
 
         $insert_log->execute(array($newlog, $_SESSION['id']));
-
+       
         header("location: edition.php?id=" . $_SESSION['id']);
     }
-    elseif (isset($_POST['newlogin']) && !empty($_POST['newlogin']) && $_POST['newlogin'] != $user['login']) 
+        elseif (isset($_POST['newlogin']) && !empty($_POST['newlogin']) && $_POST['newlogin'] != $user['login']) 
     {
         $log = htmlspecialchars(($_SESSION['login'])) ;
 
-        $requser = $bdd->prepare("SELECT * FROM utilisateurs SET login = ? WHERE id = ?");
+        $requser = $bdd->prepare("SELECT * FROM `utilisateurs` set id = ? WHERE ?");
 
         $requser->execute(array($log, $_SESSION['id']));
 
 
         $row = $requser->fetch();
-        var_dump($row);
-        var_dump($log);
+    
 
-            if ($row['COUNT(*)'] == 1 && $_POST['newlogin'] !=$log)
+            if ($row == 1 && $_POST['newlogin'] !=$log)
             {
-              echo  'erreur erreur';
+              echo  'Login existant';
             }
             else
             {
                 $newlogin = htmlspecialchars(($_POST['newlogin']));
 
-                $insert_login = $bdd->prepare("UPDATE utilisateurs SET login = ? WHERE login = ?");
+                $insert_login = $bdd->prepare("UPDATE utilisateurs SET login = ? WHERE id = ?");
 
                 $insert_login->execute(array($newlogin, $_SESSION['id']));
+                var_dump($row);
 
                 header("location: edition.php?id=" . $_SESSION['id']);
             }
@@ -71,6 +71,7 @@ if (isset($_SESSION['id']))
 
     if (isset($_POST['password']) && !empty($_POST['password'] != $user['password'])) 
     {
+       
         // on sécurise nos variable 
         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
@@ -93,17 +94,17 @@ if (isset($_SESSION['id']))
             header("location: edition.php?id=" . $_SESSION['id']);
 
         } else  $erreur = 'Login non disponible ou mot de passe non valide  !';
-        var_dump($user);
+      
     }
 
     // if (isset($_POST['pass1']) && isset($_POST['pass2'])) 
     // {
     //     // on sécurise nos variable 
 
-    //     $newpass1 =  sha1($_POST['pass1'], PASSWORD_DEFAULT);
+    //     $newpass1 =   password_hash($_POST['pass1'], PASSWORD_DEFAULT);
 
 
-    //     $newpass2 = sha1($_POST['pass2'], PASSWORD_DEFAULT);
+    //     $newpass2 = password_hash($_POST['pass2'], PASSWORD_DEFAULT);
 
     //     if ($newpass1 == $newpass2) 
     //     {
@@ -111,7 +112,7 @@ if (isset($_SESSION['id']))
 
     //         $insert_pass1->execute(array($newpass1, $_SESSION['id']));
 
-    //         header("location: edition.php?id=" . $_SESSION['id']);
+        
     //     } else  $erreur = 'Vos mot de passe ne correspondent pas !';
     // }
 
