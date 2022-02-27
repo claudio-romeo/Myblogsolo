@@ -3,7 +3,7 @@
 require_once 'bdd.php';
 
 // si on est bien connecté 
-if (isset($_SESSION['id']) &&  $_SESSION['id'] > 0) 
+if (isset($_SESSION['id'])) 
 {
     // Si l'utilisateur est connecté et qu'il a bien un id dans la bdd alors
     $requete = $bdd->prepare("SELECT * FROM utilisateurs WHERE id = ?");
@@ -12,9 +12,43 @@ if (isset($_SESSION['id']) &&  $_SESSION['id'] > 0)
 
     $user = $requete->fetch();
     
-    // $row = $requete->rowCount();
+ 
 
-    if (isset($_POST['newlogin']) && !empty($_POST['newlogin']) && $_POST['newlogin'] == $user['login']) 
+    if (isset($_POST['password']) && !empty($_POST['password'])) 
+    {
+    
+        // on sécurise nos variable 
+        $password = htmlspecialchars($_POST['password']);
+
+        $insert_pass = $bdd->prepare("SELECT * FROM utilisateurs  password = ? Where id = ?");
+
+        $insert_pass->execute(array($password, $_SESSION['id']));
+
+        $data = $insert_pass->fetch();
+
+        $row = $insert_pass->rowCount();
+
+        if ($row == 1)
+        {
+            if (password_verify($password, $data['password'])) 
+            {
+            $_SESSION['login'] = $data['login'];
+
+            $_SESSION['id'] = $data['id'];
+
+            $_SESSION['password'] = $data['password'];
+
+            $_SESSION['email'] = $data['email'];
+
+            $_SESSION['id_droits'] = $data['id_droits'];
+
+            header("location: edition.php?id=" . $_SESSION['id']);
+        } 
+    }
+
+      
+    
+    if (isset($_POST['newlogin']) && !empty($_POST['newlogin']) && $_POST['newlogin'] != $user['login']) 
     {
         // on sécurise nos variable 
         $newlog = htmlspecialchars(($_POST['newlogin']));
@@ -22,39 +56,13 @@ if (isset($_SESSION['id']) &&  $_SESSION['id'] > 0)
         $insert_log = $bdd->prepare("UPDATE utilisateurs SET login = ? WHERE id = ?");
 
         $insert_log->execute(array($newlog, $_SESSION['id']));
-       
+        
+        // $row = $insert_log->rowCount();
+        
+
         header("location: edition.php?id=" . $_SESSION['id']);
     }
-        elseif (isset($_POST['newlogin']) && !empty($_POST['newlogin']) && $_POST['newlogin'] != $user['login']) 
-    {
-        $log = htmlspecialchars(($_SESSION['login'])) ;
-
-        $requser = $bdd->prepare("SELECT * FROM `utilisateurs` set id = ? WHERE ?");
-
-        $requser->execute(array($log, $_SESSION['id']));
-
-
-        $row = $requser->fetch();
-    
-
-            if ($row == 1 && $_POST['newlogin'] !=$log)
-            {
-              echo  'Login existant';
-            }
-            else
-            {
-                $newlogin = htmlspecialchars(($_POST['newlogin']));
-
-                $insert_login = $bdd->prepare("UPDATE utilisateurs SET login = ? WHERE id = ?");
-
-                $insert_login->execute(array($newlogin, $_SESSION['id']));
-                var_dump($row);
-
-                header("location: edition.php?id=" . $_SESSION['id']);
-            }
-            
-    }
-
+       
 
     if (isset($_POST['newmail']) && !empty($_POST['newmail']) && $_POST['newmail'] != $user['email']) 
     {
@@ -65,39 +73,15 @@ if (isset($_SESSION['id']) &&  $_SESSION['id'] > 0)
         $insert_mail = $bdd->prepare("UPDATE utilisateurs SET email = ? Where id = ?");
 
         $insert_mail->execute(array($newmail, $_SESSION['id']));
-
-        header("location: edition.php?id=" . $_SESSION['id']);
+        var_dump($bdd);
+         header("location: edition.php?id=" . $_SESSION['id']);
     }
+    
+   }    var_dump($user);
+ 
 
-    if (isset($_POST['password']) && !empty($_POST['password'] != $user['password'])) 
-    {
-       
-        // on sécurise nos variable 
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-        $insert_pass = $bdd->prepare("SELECT utilisateurs SET password = ? Where id = ?");
-
-        $insert_pass->execute(array($password, $_SESSION['id']));
-
-        if (password_verify($password, $user['password'])) 
-        {
-            $_SESSION['login'] = $user['login'];
-
-            $_SESSION['id'] = $user['id'];
-
-            $_SESSION['password'] = $user['password'];
-
-            $_SESSION['email'] = $user['email'];
-
-            $_SESSION['id_droits'] = $user['id_droits'];
-
-            header("location: edition.php?id=" . $_SESSION['id']);
-
-        } else  $erreur = 'Login non disponible ou mot de passe non valide  !';
-      
-    }
-
-    // if (isset($_POST['pass1']) && isset($_POST['pass2'])) 
+   // if (isset($_POST['pass1']) && isset($_POST['pass2'])) 
     // {
     //     // on sécurise nos variable 
 
@@ -154,7 +138,7 @@ if (isset($_SESSION['id']) &&  $_SESSION['id'] > 0)
                     <input type="email" name="newmail" placeholder="Nouveau Email" value="<?php echo  $user['email']; ?>" /><br>
                     <input type="password" name="pass1" placeholder="Nouveau Password" /><br>
                     <input type="password" name="pass2" placeholder="verifier votre password" /><br>
-                    <input type="submit" name="soumis" value=" Mettre vos informations a jour">
+                    <input type="submit" name="soumis" value=" Mettre à jour mon profil !">
 
                     <?php
                     if (isset($erreur)) {
