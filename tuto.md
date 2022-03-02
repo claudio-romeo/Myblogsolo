@@ -23,3 +23,36 @@ si l'utilisateur modifie son login
                 si il correspondent alors on envoi tout en BD 
 
             si il ne met pas de nouveau mdp on met seulement le mail et le login en update.
+
+
+
+
+
+
+                   // on sécurise nos variable 
+
+        // $insert_pass = $bdd->prepare("SELECT * FROM utilisateurs WHERE id = ?");
+
+        // $insert_pass->execute(array($_SESSION['id']));
+
+        // $data = $insert_pass->fetch();
+
+        // $row = $insert_pass->rowCount();
+
+        // if ($row == 1)
+        // {
+        //     if (password_verify($password, $data['password'])) 
+        //     {
+        //         $_SESSION['login'] = $data['login'];
+
+        //         $_SESSION['id'] = $data['id'];
+
+        //         $_SESSION['password'] = $data['password'];
+
+        //         $_SESSION['email'] = $data['email'];
+
+        //         $_SESSION['id_droits'] = $data['id_droits'];
+
+        //         header("location: edition.php?id=" . $_SESSION['id']);
+        //     } 
+        // }
