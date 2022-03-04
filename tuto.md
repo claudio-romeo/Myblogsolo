@@ -56,3 +56,49 @@ si l'utilisateur modifie son login
         //         header("location: edition.php?id=" . $_SESSION['id']);
         //     } 
         // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         if (isset($_POST['newmail']) && !empty($_POST['newmail']))
+                                {
+                                    if (isset($_POST['newlogin']) && !empty($_POST['newlogin']) && $_POST['newlogin'] != $user['login'])
+                                    {
+                                        $newlog = htmlspecialchars($_POST['newlogin']);
+
+                                        $newmail = htmlspecialchars($_POST['newmail']);
+
+                                        $verif = $bdd->prepare("SELECT COUNT (*) as count FROM utilisateurs WHERE login = ?");
+
+                                        $verif->execute(array($newlog));
+
+                                        $count = $verif->fetch();
+
+                                        var_dump($user);
+
+                                        if ($count == 1 )
+                                        {
+                                            $erreur = 'login non disponible !';
+
+                                        }else 
+                                        {
+                                            $new_log = $bdd->prepare("UPDATE utilisateurs SET login = ?, email = ? WHERE id = ?");
+
+                                            $new_log->execute(array($newlog,$newmail, $_SESSION['id'] ));
+
+                                            header("location: pp.php");
+                                            exit;
+
+                                        }
+                                    }
+                                }

@@ -35,7 +35,7 @@
                         $count = $verif->fetch();
 
 
-                        if ($count > 0) {
+                        if ($count >= 0) {
                             $erreur = 'login non disponible !';
                         } else {
 
@@ -60,7 +60,7 @@
 
                         $insert_log->execute(array($newlog, $newmail, $_SESSION['id']));
 
-                        header("location: edition.php?id=" . $_SESSION['id']);
+                        // header("location: edition.php?id=" . $_SESSION['id']);
                     }
                 }
                 // 
@@ -72,27 +72,9 @@
 
                 //     $insert_mail->execute(array($newmail, $_SESSION['id']));
                 //     var_dump($bdd);
-                //     header("location: edition.php?id=" . $_SESSION['id']);
+                    // header("location: edition.php?id=" . $_SESSION['id']);
 
-                    if(isset($_POST['pass1']) && isset($_POST['pass2']))
-                    {
-                        $newpass1 =   password_hash($_POST['pass1'], PASSWORD_DEFAULT);
-
-
-                        $newpass2 = password_hash($_POST['pass2'], PASSWORD_DEFAULT);
-                        
-                        if ($newpass1 == $newpass2)
-                        {
-                                     $insert_pass1 = $bdd->prepare("UPDATE utilisateurs SET password = ? Where id = ?");
-                    
-                                     $insert_pass1->execute(array($newpass1, $_SESSION['id']));
-                            var_dump('cest ok');
-                        }
-                        else 
-                        {
-                            $erreur = 'Vos pass ne correspondent pas !';
-                        }
-                    }
+        
 
             } else {
                 $erreur = 'Erreur de saisie ! ';
@@ -102,7 +84,7 @@
 
         
 
-    ?>
+     ?>
 
         <!DOCTYPE html>
         <html lang="Fr">
@@ -160,7 +142,7 @@
         </body>
 
         </html>
-    <?php
+     <?php
     } else {
         // si l'utilisateur n'est pas connecté alors on redirect vers la page de connexion .
         header('location: connexion.php');
