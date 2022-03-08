@@ -11,12 +11,12 @@ if(isset($_SESSION['id']))
 
         $user = $requete->fetch();
 
-        var_dump('on est la');
+        var_dump('Session ID OK');
 
     if(isset($_POST['soumis']))
 
     {
-        $newlog = htmlspecialchars($_POST['newlogin']);
+        $newlog = htmlspecialchars($_POST['login']);
 
         $newmail = htmlspecialchars($_POST['newmail']);
 
@@ -27,7 +27,7 @@ if(isset($_SESSION['id']))
             if(!empty($_POST['pass1']) && !empty($_POST['pass2']))
 
             {
-                $newlog = htmlspecialchars($_POST['newlogin']);
+                $newlog = htmlspecialchars($_POST['login']);
 
                 $newmail = htmlspecialchars($_POST['newmail']);
 
@@ -37,7 +37,7 @@ if(isset($_SESSION['id']))
 
                 $edit_pass = $bdd->prepare("UPDATE utilisateurs SET login = ?, password = $pass1 email = ? WHERE id = ?");
 
-                $edit_pass->execute(array($newlog,$newmail, $_SESSION['id'] ));
+                $edit_pass->execute(array($newlog, $newmail, $_SESSION['id'] ));
 
                 var_dump('On avance mais ou ?');
 
@@ -58,7 +58,7 @@ if(isset($_SESSION['id']))
 
             if (isset($_POST['newmail']) && !empty($_POST['newmail']))
             {
-                $newlog = htmlspecialchars($_POST['newlogin']);
+                $newlog = htmlspecialchars($_POST['login']);
 
                 $newmail = htmlspecialchars($_POST['newmail']);
 
@@ -70,9 +70,9 @@ if(isset($_SESSION['id']))
                 // header("location: pp.php?id=" .$_SESSION['id']);
                 var_dump($user);
 
-                if (isset($_POST['newlogin']) && !empty($_POST['newlogin']) && $_POST['newlogin'] != $user['login'])
+                if (isset($_POST['login']) && !empty($_POST['login']) && $_POST['login'] != $user['login'])
                 {
-                    $newlog = htmlspecialchars($_POST['newlogin']);
+                    $newlog = htmlspecialchars($_POST['login']);
 
                     $newmail = htmlspecialchars($_POST['newmail']);
 
@@ -84,7 +84,7 @@ if(isset($_SESSION['id']))
 
                     var_dump('okok');
 
-                           
+                      header("location: pp.php?id=" .$_SESSION['id']);     
                 }
                     
 
@@ -139,7 +139,7 @@ if(isset($_SESSION['id']))
                 <form action="" method="POST" class="profil_tab" align="center">
                     <table>
 
-                        <input type="text" name="newlogin" placeholder="Modifier votre login" value="<?php echo $user['login'];?>"/><br>
+                        <input type="text" name="login" placeholder="Modifier votre login" value="<?php echo $user['login'];?>"/><br>
                         <input type="password" name="password" placeholder="Password" /><br>
                         <input type="email" name="newmail" placeholder="Nouveau Email" value="<?php echo  $user['email'];?>" /><br>
                         <input type="password" name="pass1" placeholder="Nouveau Password" /><br>

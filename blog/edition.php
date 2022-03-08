@@ -20,39 +20,43 @@
 
                 if (isset($_POST['newmail']) && !empty($_POST['newmail'])) {
 
-                    if (isset($_POST['newlogin']) && !empty($_POST['newlogin']) && $_POST['newlogin'] != $user['login']) {
+                    if (isset($_POST['login']) && !empty($_POST['login']) && $_POST['login'] != $user['login']) {
 
                         // on sécurise nos variable 
-                        $newlog = htmlspecialchars($_POST['newlogin']);
+                        $newlog = htmlspecialchars($_POST['login']);
 
                         $newmail = htmlspecialchars($_POST['newmail']);
 
-                        // faire une requete à la bd pour savoir si $_POST['newlogin'] existe dejà
-                        $verif = $bdd->prepare("SELECT COUNT(*) as count FROM utilisateurs WHERE login = ?");
+                        // faire une requete à la bd pour savoir si $_POST['login'] existe dejà
+                        $verif = $bdd->prepare("SELECT COUNT(*) as count FROM utilisateurs WHERE login != $newlog");
 
                         $verif->execute(array($newlog));
 
-                        $count = $verif->fetch();
+                        $count = $verif->Rowcount();
 
 
-                        if ($count >= 0) {
+                        if ($count > 0) 
+                        {
                             $erreur = 'login non disponible !';
-                        } else {
 
-
+                        } else 
+                        { 
+                            var_dump('ok');
                             $insert_log = $bdd->prepare("UPDATE utilisateurs SET login = ?, email = ? WHERE id = ?");
 
                             $insert_log->execute(array($newlog, $newmail, $_SESSION['id']));
 
+                            // header("location: edition.php?id=" . $_SESSION['id']);
+                            
+                         
 
 
-                            header("location: edition.php?id=" . $_SESSION['id']);
                         }
-                    } elseif (isset($_POST['newlogin']) && !empty($_POST['newlogin']) && $_POST['newlogin'] == $user['login']) {
+                    } elseif (isset($_POST['login']) && !empty($_POST['login']) && $_POST['login'] == $user['login']) {
 
 
                     
-                        $newlog = htmlspecialchars($_POST['newlogin']);
+                        $newlog = htmlspecialchars($_POST['login']);
 
                         $newmail = htmlspecialchars($_POST['newmail']);
 
@@ -117,7 +121,7 @@
                 <form action="" method="POST" class="profil_tab" align="center">
                     <table>
 
-                        <input type="text" name="newlogin" placeholder="Modifier votre login" value="<?php echo $user['login']; ?>" /><br>
+                        <input type="text" name="login" placeholder="Modifier votre login" value="<?php echo $user['login']; ?>" /><br>
                         <input type="password" name="password" placeholder="Password" /><br>
                         <input type="email" name="newmail" placeholder="Nouveau Email" value="<?php echo  $user['email']; ?>" /><br>
                         <input type="password" name="pass1" placeholder="Nouveau Password" /><br>

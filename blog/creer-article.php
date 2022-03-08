@@ -13,7 +13,7 @@ if(isset($_POST['article_contenu']))
 
             $article_contenu = htmlspecialchars($_POST['article_contenu']);
 
-            $insert = $bdd->prepare("INSERT INTO commentaires (commentaires, id_article, id_utilisateur, dates) VALUES (?,?,?,NOW()");
+            $insert = $bdd->prepare("INSERT INTO `articles` (articles, id_article, id_utilisateur, dates) VALUES (?,?,?,NOW()");
             $insert->execute(array( $article_contenu, 1 ,1));
 
             $erreur = 'its ok';
@@ -35,7 +35,7 @@ if(isset($_POST['article_contenu']))
     <body>
         <form method="POST">
 
-            <textarea name="article_contenu" placeholder="Contenu de l'article"></textarea> <br>
+            <textarea name="article_contenu" placeholder="Contenu de l'article" id="articles"> </textarea> <br>
             <input type="submit" value="Envoyer">
 
             

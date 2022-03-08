@@ -37,6 +37,7 @@ require_once 'bdd.php';
             <li><a href="edition.php">profil</a></li>
             <li><a href="creer-article.php">Poster</a></li>
             <li><a href="article.php">Article</a></li>
+            <li><a href="creer-article.php">Ajouter un article</a></li>
 
 
         <?php
