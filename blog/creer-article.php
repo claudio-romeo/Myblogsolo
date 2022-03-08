@@ -6,4 +6,45 @@ require_once 'bdd.php';
 // en base de données et un bouton submit.
 include('header.php');
 
+if(isset($_POST['article_contenu']))
+    {
+        if(!empty($_POST['article_contenu']))
+        {
 
+            $article_contenu = htmlspecialchars($_POST['article_contenu']);
+
+            $insert = $bdd->prepare("INSERT INTO commentaires (commentaires, id_article, id_utilisateur, dates) VALUES (?,?,?,NOW()");
+            $insert->execute(array( $article_contenu, 1 ,1));
+
+            $erreur = 'its ok';
+        }else 
+        {
+            $erreur = 'Veuillez remplir tout les champs';
+        }
+    }
+
+
+?>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Articles</title>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <form method="POST">
+
+            <textarea name="article_contenu" placeholder="Contenu de l'article"></textarea> <br>
+            <input type="submit" value="Envoyer">
+
+            
+            <?php
+                        if (isset($erreur)) {
+                            echo '<p style="color:red"> ' . $erreur . '</p>';
+                        }
+
+                        ?>
+        </form>
+    </body>
+</html>
