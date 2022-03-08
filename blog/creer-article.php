@@ -6,6 +6,15 @@ require_once 'bdd.php';
 // en base de données et un bouton submit.
 include('header.php');
 
+
+if (isset($_SESSION['id'])) {
+    // Si l'utilisateur est connecté et qu'il a bien un id dans la bdd alors
+    $requete = $bdd->prepare("SELECT * FROM utilisateurs WHERE id = ?");
+
+    $requete->execute(array($_SESSION['id']));
+
+    $user = $requete->fetch();
+
 if(isset($_POST['article_contenu']))
     {
         if(!empty($_POST['article_contenu']))
@@ -48,3 +57,10 @@ if(isset($_POST['article_contenu']))
         </form>
     </body>
 </html>
+
+<?php
+    } else {
+        // si l'utilisateur n'est pas connecté alors on redirect vers la page de connexion .
+        header('location: connexion.php');
+    }
+    ?>
