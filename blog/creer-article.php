@@ -15,17 +15,17 @@ if (isset($_SESSION['id'])) {
 
     $user = $requete->fetch();
 
-if(isset($_POST['article_contenu']))
+if(isset($_POST['submit']))
     {
         if(!empty($_POST['article_contenu']))
         {
 
             $article_contenu = htmlspecialchars($_POST['article_contenu']);
 
-            $insert = $bdd->prepare("INSERT INTO `articles` (articles, id_article, id_utilisateur, dates) VALUES (?,?,?,NOW()");
-            $insert->execute(array( $article_contenu, 1 ,1));
+            $insert = $bdd->prepare("INSERT INTO `articles` ( `article`, `id_utilisateur`, `id_categorie`, `date`) VALUES (?,?,1,NOW())");
+            $insert->execute(array($article_contenu, $_SESSION['id']));
 
-            $erreur = 'its ok';
+            
         }else 
         {
             $erreur = 'Veuillez remplir tout les champs';
@@ -44,8 +44,8 @@ if(isset($_POST['article_contenu']))
     <body>
         <form method="POST">
 
-            <textarea name="article_contenu" placeholder="Contenu de l'article" id="articles"> </textarea> <br>
-            <input type="submit" value="Envoyer">
+            <textarea name="article_contenu" placeholder="Contenu de l'article" id="articles"></textarea> <br>
+            <input type="submit" name="submit" value="Envoyer">
 
             
             <?php
